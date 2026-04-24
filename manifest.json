@@ -1,0 +1,23 @@
+{
+  "name": "Enduro Timer — Atleta",
+  "short_name": "Enduro Timer",
+  "description": "App de cronometragem para atletas de MTB Enduro",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#080808",
+  "theme_color": "#ff6b00",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "sports",
+    "utilities"
+  ],
+  "lang": "pt-BR"
+}

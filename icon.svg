@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="80" fill="#080808"/>
+  <rect width="512" height="512" rx="80" fill="#ff6b00" opacity="0.15"/>
+  <!-- Bicicleta estilizada -->
+  <circle cx="160" cy="340" r="80" fill="none" stroke="#ff6b00" stroke-width="28"/>
+  <circle cx="352" cy="340" r="80" fill="none" stroke="#ff6b00" stroke-width="28"/>
+  <circle cx="160" cy="340" r="16" fill="#ff6b00"/>
+  <circle cx="352" cy="340" r="16" fill="#ff6b00"/>
+  <!-- Quadro -->
+  <line x1="160" y1="340" x2="256" y2="200" stroke="#ff6b00" stroke-width="24" stroke-linecap="round"/>
+  <line x1="256" y1="200" x2="352" y2="340" stroke="#ff6b00" stroke-width="24" stroke-linecap="round"/>
+  <line x1="256" y1="200" x2="256" y2="340" stroke="#ff6b00" stroke-width="20" stroke-linecap="round"/>
+  <line x1="160" y1="340" x2="256" y2="280" stroke="#ff6b00" stroke-width="20" stroke-linecap="round"/>
+  <!-- Guidão -->
+  <line x1="230" y1="200" x2="290" y2="200" stroke="#ff6b00" stroke-width="20" stroke-linecap="round"/>
+  <!-- Selim -->
+  <line x1="240" y1="340" x2="280" y2="340" stroke="#ff6b00" stroke-width="16" stroke-linecap="round"/>
+  <!-- Cronômetro -->
+  <text x="256" y="140" font-family="monospace" font-size="48" font-weight="900" fill="#ff6b00" text-anchor="middle">⏱</text>
+</svg>
