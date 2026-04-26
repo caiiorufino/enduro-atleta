@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -5,853 +6,480 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Enduro Timer">
-<meta name="theme-color" content="#ff6b00">
+<meta name="theme-color" content="#ffffff">
 <title>Enduro Timer — Atleta</title>
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/icon.svg">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
 <style>
-  :root{--orange:#ff6b00;--green:#00ff88;--yellow:#e8c547;--bg:#080808;--surface:#0d0d0d;--border:#1a1a1a;--muted:#555}
-  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-  body{background:var(--bg);color:#fff;font-family:'DM Sans',sans-serif;padding-bottom:40px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#f5f4f0;color:#1a1a18;font-family:'Inter',sans-serif;min-height:100vh;padding-bottom:48px}
 
-  /* HEADER */
-  .header{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#0f0f0f,#080808);border-bottom:1px solid #151515;padding:18px 24px 14px;display:flex;justify-content:space-between;align-items:center}
-  .h-label{font-size:10px;color:var(--muted);letter-spacing:3px;text-transform:uppercase}
-  .h-title{font-family:'Bebas Neue',cursive;font-size:24px;color:var(--orange);letter-spacing:1px}
-  .h-right{text-align:right}
-  .h-name{font-size:13px;font-weight:700}
-  .h-meta{font-size:11px;color:var(--muted)}
-  .pad{padding:0 20px}
+/* HEADER */
+.header{background:#fff;border-bottom:0.5px solid #e0dfd8;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.logo{font-family:'Inter',sans-serif;font-weight:900;font-size:17px;letter-spacing:-.6px;color:#1a1a18}
+.logo span{color:#E8593C}
+.h-name{font-size:13px;font-weight:500;text-align:right;font-family:'DM Mono',monospace}
+.h-meta{font-size:11px;color:#999;margin-top:1px;text-align:right;font-family:'DM Mono',monospace}
+.btn-help{width:30px;height:30px;border-radius:50%;border:0.5px solid #e0dfd8;background:#f5f4f0;color:#999;font-size:13px;cursor:pointer;font-weight:500}
 
-  /* LOGIN */
-  .login-box{margin:32px 0;padding:28px;border-radius:16px;background:var(--surface);border:1px solid var(--border)}
-  .login-title{font-size:16px;font-weight:700;margin-bottom:6px}
-  .login-sub{font-size:12px;color:#555;margin-bottom:20px}
-  .fl{font-size:11px;color:#555;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;display:block}
-  .fi{width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:10px;padding:10px 14px;color:#fff;font-size:14px;outline:none;font-family:inherit;margin-bottom:16px;transition:border-color .2s}
-  .fi:focus{border-color:var(--orange)}
-  .btn-login{width:100%;padding:12px;border-radius:12px;border:none;background:var(--orange);color:#000;font-weight:700;font-size:14px;cursor:pointer;font-family:inherit}
-  .btn-login:disabled{background:#1a1a1a;color:#333;cursor:not-allowed}
-  .err{font-size:12px;color:#ff4444;margin-top:10px;display:none}
+/* LOGIN */
+.login-wrap{padding:28px 20px}
+.login-card{background:#fff;border:0.5px solid #e0dfd8;border-radius:16px;padding:28px 24px}
+.login-title{font-family:'Inter',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.5px;margin-bottom:4px}
+.login-sub{font-size:12px;color:#999;margin-bottom:24px;line-height:1.6;font-family:'DM Mono',monospace}
+.field{margin-bottom:16px}
+.field label{display:block;font-size:10px;color:#999;letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px;font-family:'DM Mono',monospace}
+.field input{width:100%;height:42px;padding:0 14px;border:0.5px solid #d8d6ce;border-radius:8px;background:#f9f8f5;color:#1a1a18;font-family:'DM Mono',monospace;font-size:14px;outline:none;transition:border-color .15s}
+.field input:focus{border-color:#E8593C;background:#fff}
+.btn-primary{width:100%;height:46px;background:#E8593C;color:#fff;border:none;border-radius:10px;font-family:'Inter',sans-serif;font-weight:700;font-size:15px;cursor:pointer;transition:background .15s}
+.btn-primary:hover{background:#d04a2e}
+.btn-primary:active{transform:scale(.98)}
+.btn-primary:disabled{background:#e8e6de;color:#bbb;cursor:not-allowed;transform:none}
+.login-err{font-size:12px;color:#E8593C;margin-top:10px;display:none;line-height:1.5;font-family:'DM Mono',monospace}
 
-  /* CONECTIVIDADE — barra principal */
-  .conn-bar{margin:20px 0 10px;padding:12px 16px;border-radius:12px;border:1px solid #1a1a1a;background:#0a0a0a;display:flex;align-items:center;justify-content:space-between;transition:all .4s}
-  .conn-bar.online{border-color:#00ff8833;background:#00ff8808}
-  .conn-bar.offline{border-color:#ff444433;background:#ff44440a}
-  .conn-bar.syncing{border-color:#e8c54733;background:#e8c54708}
-  .conn-left{display:flex;align-items:center;gap:10px}
-  .conn-dot{width:10px;height:10px;border-radius:50%;background:#333;flex-shrink:0;transition:all .3s}
-  .conn-bar.online .conn-dot{background:var(--green);box-shadow:0 0 8px var(--green)}
-  .conn-bar.offline .conn-dot{background:#ff4444;box-shadow:0 0 8px #ff444488}
-  .conn-bar.syncing .conn-dot{background:var(--yellow);box-shadow:0 0 8px var(--yellow);animation:pulse 0.8s infinite}
-  .conn-label{font-size:12px;font-weight:700;color:#444;transition:color .3s}
-  .conn-bar.online .conn-label{color:var(--green)}
-  .conn-bar.offline .conn-label{color:#ff6666}
-  .conn-bar.syncing .conn-label{color:var(--yellow)}
-  .conn-sub{font-size:10px;color:#444;margin-top:1px}
+/* CONN BAR */
+.conn-bar{margin:16px 20px 0;padding:10px 14px;border-radius:10px;border:0.5px solid #e0dfd8;background:#fff;display:flex;align-items:center;gap:10px}
+.conn-bar.online{border-color:#16a34a33;background:#f0fdf4}
+.conn-bar.offline{border-color:#E8593C33;background:#fff7f5}
+.conn-bar.syncing{border-color:#d9770033;background:#fffbf0}
+.conn-dot{width:8px;height:8px;border-radius:50%;background:#ccc;flex-shrink:0}
+.conn-bar.online  .conn-dot{background:#16a34a}
+.conn-bar.offline .conn-dot{background:#E8593C}
+.conn-bar.syncing .conn-dot{background:#d97700;animation:blink .8s infinite}
+.conn-label{font-size:12px;font-weight:500;color:#999}
+.conn-bar.online  .conn-label{color:#16a34a}
+.conn-bar.offline .conn-label{color:#E8593C}
+.conn-bar.syncing .conn-label{color:#d97700}
+.conn-sub{font-size:10px;color:#bbb;margin-top:1px}
 
-  /* FILA OFFLINE */
-  .queue-box{margin:0 0 16px;padding:14px 18px;border-radius:12px;background:#0a0500;border:1px solid #e8c54733;display:none;animation:slideUp .3s ease}
-  .queue-box.show{display:block}
-  .queue-title{font-size:11px;color:var(--yellow);font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:6px}
-  .queue-item{font-size:11px;font-family:monospace;color:#888;padding:3px 0;border-bottom:1px solid #1a1a1a}
-  .queue-item:last-child{border-bottom:none}
-  .btn-sync{margin-top:10px;width:100%;padding:9px;border-radius:9px;border:1px solid #e8c54744;background:#e8c54712;color:var(--yellow);font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .2s}
-  .btn-sync:disabled{opacity:.4;cursor:not-allowed}
+/* QUEUE */
+.queue-card{margin:10px 20px 0;background:#fffbf0;border:0.5px solid #d9770033;border-radius:12px;padding:14px 16px;display:none}
+.queue-card.show{display:block}
+.queue-ttl{font-size:10px;font-weight:500;color:#d97700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:8px}
+.queue-item{font-size:11px;color:#999;padding:3px 0;border-bottom:0.5px solid #f0edd8}
+.queue-item:last-child{border-bottom:none}
+.btn-sync{margin-top:10px;width:100%;height:34px;border:0.5px solid #d9770044;border-radius:7px;background:#d9770012;color:#d97700;font-family:'DM Mono',monospace;font-size:12px;cursor:pointer}
+.btn-sync:disabled{opacity:.4;cursor:not-allowed}
 
-  /* SCANNER */
-  .scanner{margin:0 0 16px;padding:16px 20px;border-radius:14px;border:1px solid var(--border);background:#111;display:flex;align-items:center;justify-content:space-between;transition:all .3s}
-  .scanner.on{background:#ff6b0010;border-color:#ff6b0033}
-  .s-label{font-size:12px;font-weight:700;color:var(--muted)}
-  .scanner.on .s-label{color:var(--orange)}
-  .s-sub{font-size:11px;color:#444;margin-top:2px}
-  .btn-scan{padding:10px 20px;border-radius:10px;border:none;cursor:pointer;background:#1a1a1a;color:#666;font-weight:700;font-size:13px;transition:all .3s;font-family:inherit}
-  .btn-scan.on{background:var(--orange);color:#000}
+/* SCAN TRIGGER */
+.scan-row{margin:12px 20px 0;background:#fff;border:0.5px solid #e0dfd8;border-radius:12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between}
+.scan-row.active{background:#fff7f5;border-color:#E8593C44}
+.scan-lbl{font-size:13px;font-weight:500;color:#999}
+.scan-row.active .scan-lbl{color:#E8593C}
+.scan-sub{font-size:11px;color:#bbb;margin-top:2px}
+.btn-escanear{height:36px;padding:0 18px;border-radius:8px;border:0.5px solid #e0dfd8;background:#f5f4f0;color:#555;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;white-space:nowrap}
+.btn-escanear.active{background:#E8593C;border-color:#E8593C;color:#fff}
 
-  /* LIVE TIMER */
-  .live{display:none;margin:0 0 20px;padding:24px;border-radius:16px;background:#0d0500;border:1px solid #ff6b0033;text-align:center;animation:slideUp .3s ease}
-  .live.show{display:block}
-  .live-lbl{font-size:11px;color:#ff6b0088;letter-spacing:2px;margin-bottom:8px}
-  .live-time{font-size:64px;font-weight:900;font-family:monospace;color:var(--orange);letter-spacing:-2px;animation:glow 1s ease-in-out infinite alternate}
-  .live-name{font-size:11px;color:var(--muted);margin-top:8px}
+/* VIEWFINDER */
+.vf-card{margin:10px 20px 0;background:#fff;border:0.5px solid #e0dfd8;border-radius:14px;overflow:hidden;display:none}
+.vf-card.show{display:block}
+.vf-box{position:relative;width:100%;aspect-ratio:1;background:#111}
+video{width:100%;height:100%;object-fit:cover;display:block}
+canvas#qrCanvas{display:none}
+.vf-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.vf-frame{width:200px;height:200px;position:relative}
+.c{position:absolute;width:24px;height:24px;border-color:#E8593C;border-style:solid}
+.c.tl{top:0;left:0;border-width:3px 0 0 3px}
+.c.tr{top:0;right:0;border-width:3px 3px 0 0}
+.c.bl{bottom:0;left:0;border-width:0 0 3px 3px}
+.c.br{bottom:0;right:0;border-width:0 3px 3px 0}
+@keyframes scan{0%{top:8%}100%{top:84%}}
+.scan-ln{position:absolute;left:0;right:0;height:1.5px;background:linear-gradient(90deg,transparent,#E8593C,transparent);animation:scan 1.6s ease-in-out infinite alternate}
+.vf-hint{padding:11px 16px;font-size:11px;color:#bbb;text-align:center}
 
-  /* RSSI */
-  .rssi-box{display:none;margin:0 0 20px;padding:20px;border-radius:16px;background:#0a0a0a;border:1px solid var(--border)}
-  .rssi-box.show{display:block}
-  .rssi-title{font-size:11px;color:#444;text-align:center;margin-bottom:16px;letter-spacing:2px}
-  .rssi-row{margin-bottom:10px}
-  .rssi-hd{display:flex;justify-content:space-between;font-size:11px;color:#888;margin-bottom:4px}
-  .rssi-track{height:6px;background:#1a1a1a;border-radius:3px;overflow:hidden}
-  .rssi-fill{height:100%;border-radius:3px;transition:width .3s,background .3s}
+/* CONFIRMAÇÃO */
+.conf-card{margin:10px 20px 0;background:#fff;border:0.5px solid #e0dfd8;border-radius:14px;padding:24px 20px;display:none;text-align:center}
+.conf-card.show{display:block;animation:pop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+.ci{font-size:44px;margin-bottom:12px}
+.cs{font-family:'Inter',sans-serif;font-weight:800;font-size:22px;letter-spacing:-.3px}
+.ct{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-top:3px;font-weight:500}
+.ct.start{color:#E8593C}
+.ct.finish{color:#16a34a}
+.ct.err{color:#bbb}
+.cts{font-size:38px;font-weight:500;letter-spacing:1px;margin:14px 0 2px;font-family:'DM Mono',monospace}
+.cd{font-size:12px;color:#bbb}
+.csync{font-size:11px;margin-top:10px;color:#bbb;display:flex;align-items:center;justify-content:center;gap:6px}
+.sdot{width:7px;height:7px;border-radius:50%;background:#d97700;animation:blink 1s infinite}
+.sdot.ok{background:#16a34a;animation:none}
+.btn-next{margin-top:18px;width:100%;height:42px;border:0.5px solid #e0dfd8;border-radius:9px;background:#f5f4f0;color:#999;font-family:'DM Mono',monospace;font-size:12px;cursor:pointer}
 
-  /* STAGES */
-  .sec-lbl{font-size:11px;color:#444;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
-  .sc{border:1px solid var(--border);border-radius:16px;padding:20px 24px;margin-bottom:12px;background:var(--surface);position:relative;overflow:hidden;transition:all .4s}
-  .sc.active{background:#ff6b0008;border-color:#ff6b0066}
-  .sc.done{background:#00ff880a;border-color:#00ff8833}
-  .sc.pending{background:#e8c54708;border-color:#e8c54733}
-  .scan-line{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--orange),transparent);display:none}
-  .sc.active .scan-line{display:block;animation:scanLine 1.5s linear infinite}
-  .sc-top{display:flex;justify-content:space-between;align-items:flex-start}
-  .sc-num{font-size:11px;color:var(--muted);letter-spacing:2px;margin-bottom:4px}
-  .sc-name{font-size:16px;font-weight:700;font-family:'Bebas Neue',cursive}
-  .sc.active .sc-name{color:var(--orange)}
-  .sc.done .sc-name{color:var(--green)}
-  .sc.pending .sc-name{color:var(--yellow)}
-  .sc-time{font-size:28px;font-weight:900;font-family:monospace;color:var(--green)}
-  .sc-time-lbl{font-size:10px;color:#00ff8888}
-  .sc-time.pend{color:var(--yellow)}
-  .sc-time-lbl.pend{color:#e8c54788}
-  .sc-wait{font-size:11px;color:#444}
-  .sc-run{font-size:11px;color:var(--orange);animation:pulse 1s infinite}
-  .sc-btns{margin-top:16px;display:flex;gap:8px}
-  .sc-btn{flex:1;padding:10px 16px;border-radius:10px;cursor:pointer;font-size:12px;font-weight:600;font-family:inherit}
-  .btn-s{border:1px solid #ff6b0044;background:#ff6b0011;color:var(--orange)}
-  .btn-f{border:1px solid #00ff8844;background:#00ff8811;color:var(--green)}
-  .sc-meta{margin-top:12px;font-size:11px;color:#444}
+/* LIVE */
+.live-card{margin:10px 20px 0;background:#fff7f5;border:0.5px solid #E8593C33;border-radius:14px;padding:20px;text-align:center;display:none}
+.live-card.show{display:block}
+.live-lbl{font-size:10px;color:#E8593Caa;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px}
+.live-time{font-size:52px;font-weight:500;font-family:'DM Mono',monospace;color:#E8593C;letter-spacing:-1px}
+.live-stage{font-size:11px;color:#E8593Caa;margin-top:5px}
 
-  /* TOTAL */
-  .total{display:none;padding:20px 24px;border-radius:16px;background:linear-gradient(135deg,#00ff8810,#00cc6610);border:1px solid #00ff8833;margin-bottom:20px}
-  .total.show{display:flex;justify-content:space-between;align-items:center;animation:slideUp .4s ease}
-  .total-lbl{font-size:11px;color:#00ff8888;letter-spacing:2px}
-  .total-sub{font-size:11px;color:#444;margin-top:2px}
-  .total-time{font-size:36px;font-weight:900;font-family:monospace;color:var(--green)}
+/* STAGES */
+.stages-wrap{padding:18px 20px 0}
+.sec-lbl{font-size:10px;color:#bbb;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;font-family:'DM Mono',monospace}
+.stage-card{background:#fff;border:0.5px solid #e0dfd8;border-radius:12px;padding:16px 18px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center}
+.stage-card.done{background:#f0fdf4;border-color:#16a34a33}
+.stage-card.running{background:#fff7f5;border-color:#E8593C33}
+.stage-card.pending{background:#fffbf0;border-color:#d9770033}
+.sn{font-size:10px;color:#bbb;letter-spacing:1px;margin-bottom:3px;font-family:'DM Mono',monospace}
+.snm{font-size:15px;font-weight:600;font-family:'Inter',sans-serif}
+.stage-card.done    .snm{color:#16a34a}
+.stage-card.running .snm{color:#E8593C}
+.st{font-size:22px;font-weight:500;font-family:'DM Mono',monospace;color:#16a34a;text-align:right}
+.stl{font-size:10px;color:#16a34aaa;text-align:right;margin-top:2px}
+.st.p{color:#d97700}
+.stl.p{color:#d97700aa}
+.sw{font-size:11px;color:#ccc}
+.sr{font-size:11px;color:#E8593C;animation:blink 1s infinite}
+.smeta{font-size:10px;color:#bbb;margin-top:8px;padding-top:8px;border-top:0.5px solid #f0eed8;width:100%}
 
-  /* LOG */
-  .log{display:none;margin-bottom:20px}
-  .log.show{display:block}
-  .log-list{background:#0a0a0a;border-radius:12px;padding:12px 16px;border:1px solid #151515;max-height:160px;overflow-y:auto}
-  .log-e{font-size:11px;font-family:monospace;padding:3px 0;border-bottom:1px solid #111;color:#444}
-  .log-e:first-child{color:#ccc}
-  .log-e:last-child{border-bottom:none}
+/* TOTAL */
+.total-card{margin:0 20px;background:#fff;border:0.5px solid #16a34a33;border-radius:12px;padding:16px 18px;display:none;align-items:center;justify-content:space-between}
+.total-card.show{display:flex}
+.tl{font-size:10px;color:#16a34aaa;letter-spacing:1px;text-transform:uppercase}
+.ts2{font-size:11px;color:#bbb;margin-top:2px}
+.tt{font-size:28px;font-weight:500;font-family:'DM Mono',monospace;color:#16a34a}
 
-  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-  @keyframes glow{from{text-shadow:0 0 20px #ff6b0044}to{text-shadow:0 0 60px #ff6b00aa}}
-  @keyframes scanLine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+/* LOG */
+.log-wrap{padding:16px 20px 0;display:none}
+.log-wrap.show{display:block}
+.log-inner{background:#fff;border:0.5px solid #e0dfd8;border-radius:10px;padding:10px 14px;max-height:140px;overflow-y:auto}
+.log-e{font-size:11px;color:#bbb;padding:3px 0;border-bottom:0.5px solid #f5f4f0}
+.log-e:first-child{color:#555}
+.log-e:last-child{border-bottom:none}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:#0000004a;z-index:100;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto}
+.modal-bg.show{display:flex}
+.modal{width:100%;max-width:440px;background:#fff;border-radius:20px;padding:28px 24px;margin:auto}
+.modal-title{font-family:'Inter',sans-serif;font-weight:800;font-size:20px;letter-spacing:-.4px;margin-bottom:20px}
+.hi{padding:14px 0;border-bottom:0.5px solid #f0eed8;display:flex;gap:14px}
+.hi:last-of-type{border-bottom:none}
+.hnum{width:28px;height:28px;border-radius:50%;background:#E8593C;color:#fff;font-family:'Inter',sans-serif;font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.hh{font-size:13px;font-weight:600;margin-bottom:3px;font-family:'Inter',sans-serif}
+.hs{font-size:12px;color:#999;line-height:1.6;font-family:'DM Mono',monospace}
+
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
 </style>
 </head>
 <body>
+
 <div class="header">
-  <div><div class="h-label">MTB Enduro</div><div class="h-title">CRONÔMETRO</div></div>
-  <div style="display:flex;align-items:center;gap:12px">
-    <button onclick="openHelp()" style="width:32px;height:32px;border-radius:50%;border:1px solid #2a2a2a;background:#1a1a1a;color:#888;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:700">?</button>
-    <div class="h-right"><div class="h-name" id="hName">—</div><div class="h-meta" id="hMeta">faça login</div></div>
+  <div class="logo">Enduro<span>Timer</span></div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="btn-help" onclick="openHelp()">?</button>
+    <div><div class="h-name" id="hName">—</div><div class="h-meta" id="hMeta">faça login</div></div>
   </div>
 </div>
-<div class="pad">
-  <!-- LOGIN -->
-  <div id="secLogin">
-    <div class="login-box">
-      <div class="login-title">Identificação do Atleta</div>
-      <div class="login-sub">Preencha os dados fornecidos pelo organizador</div>
-      <label class="fl">Código do Evento</label>
-      <input class="fi" id="inCode" placeholder="Ex: ENDURO25" style="text-transform:uppercase">
-      <label class="fl">Número de largada</label>
-      <input class="fi" id="inNum" placeholder="Ex: 42" maxlength="4">
-      <label class="fl">PIN</label>
-      <input class="fi" id="inPin" placeholder="Ex: 7391" maxlength="4" type="number">
-      <button class="btn-login" id="btnLogin" onclick="doLogin()">Entrar</button>
-      <div class="err" id="loginErr">Número não encontrado. Verifique com o organizador.</div>
+
+<!-- LOGIN -->
+<div id="secLogin">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="login-title">Identificação</div>
+      <div class="login-sub">Dados fornecidos pelo organizador. O login fica salvo no celular.</div>
+      <div class="field"><label>Código do evento</label><input id="inCode" placeholder="ex: volta-mundo-2025" autocapitalize="none" autocomplete="off"></div>
+      <div class="field"><label>Número de largada</label><input id="inNum" placeholder="ex: 42" type="number" inputmode="numeric"></div>
+      <div class="field" style="margin-bottom:20px"><label>PIN</label><input id="inPin" placeholder="ex: 7391" type="number" inputmode="numeric"></div>
+      <button class="btn-primary" id="btnLogin" onclick="doLogin()">Entrar</button>
+      <div class="login-err" id="loginErr"></div>
     </div>
   </div>
-  <!-- APP -->
-  <div id="secApp" style="display:none">
-    <!-- Barra de conectividade -->
-    <div class="conn-bar" id="connBar">
-      <div class="conn-left">
-        <div class="conn-dot" id="connDot"></div>
-        <div><div class="conn-label" id="connLabel">Verificando...</div><div class="conn-sub" id="connSub">aguarde</div></div>
+</div>
+
+<!-- APP -->
+<div id="secApp" style="display:none">
+
+  <div class="conn-bar" id="connBar">
+    <div class="conn-dot"></div>
+    <div><div class="conn-label" id="connLabel">Verificando...</div><div class="conn-sub" id="connSub">aguarde</div></div>
+  </div>
+
+  <div class="queue-card" id="queueCard">
+    <div class="queue-ttl">Tempos offline — aguardando sync</div>
+    <div id="queueList"></div>
+    <button class="btn-sync" id="btnSync" onclick="syncQueue()">Sincronizar agora</button>
+  </div>
+
+  <div class="scan-row" id="scanRow">
+    <div><div class="scan-lbl" id="scanLbl">Scanner inativo</div><div class="scan-sub" id="scanSub">Toque para escanear um QR</div></div>
+    <button class="btn-escanear" id="btnScan" onclick="toggleScanner()">Escanear</button>
+  </div>
+
+  <div class="vf-card" id="vfCard">
+    <div class="vf-box">
+      <video id="qrVideo" playsinline autoplay muted></video>
+      <canvas id="qrCanvas"></canvas>
+      <div class="vf-overlay">
+        <div class="vf-frame">
+          <div class="c tl"></div><div class="c tr"></div>
+          <div class="c bl"></div><div class="c br"></div>
+          <div class="scan-ln"></div>
+        </div>
       </div>
     </div>
+    <div class="vf-hint">Aponte para o QR code fixado no ponto de detecção</div>
+  </div>
 
-    <!-- Fila offline -->
-    <div class="queue-box" id="queueBox">
-      <div class="queue-title">🕐 Tempos salvos offline — aguardando sync</div>
-      <div id="queueList"></div>
-      <button class="btn-sync" id="btnSync" onclick="syncQueue()">🔄 Sincronizar agora</button>
-    </div>
+  <div class="conf-card" id="confCard">
+    <div class="ci" id="ci"></div>
+    <div class="cs" id="cs"></div>
+    <div class="ct" id="ct"></div>
+    <div class="cts" id="cts"></div>
+    <div class="cd" id="cd"></div>
+    <div class="csync" id="csync"><div class="sdot" id="sdot"></div><span id="slbl">Sincronizando...</span></div>
+    <button class="btn-next" onclick="dismissConf()">← Próximo ponto</button>
+  </div>
 
-    <!-- Scanner -->
-    <div class="scanner" id="scanner">
-      <div><div class="s-label" id="sLabel">○ SCANNER INATIVO</div><div class="s-sub" id="sSub">Toque para ativar</div></div>
-      <button class="btn-scan" id="btnScan" onclick="toggleScanner()">ATIVAR</button>
-    </div>
+  <div class="live-card" id="liveCard">
+    <div class="live-lbl" id="liveLbl">EM ANDAMENTO</div>
+    <div class="live-time" id="liveTime">00:00.000</div>
+    <div class="live-stage" id="liveSt"></div>
+  </div>
 
-    <!-- Live Timer -->
-    <div class="live" id="liveBox">
-      <div class="live-lbl" id="liveLbl">STAGE 1 EM ANDAMENTO</div>
-      <div class="live-time" id="liveTime">00:00.000</div>
-      <div class="live-name" id="liveName"></div>
-    </div>
-
-    <!-- RSSI -->
-    <div class="rssi-box" id="rssiBox">
-      <div class="rssi-title">SINAL DOS BEACONS</div>
-      <div class="rssi-row"><div class="rssi-hd"><span>Beacon Largada</span><span id="rSV" style="font-family:monospace">-90 dBm</span></div><div class="rssi-track"><div class="rssi-fill" id="rFS" style="width:0%;background:#444"></div></div></div>
-      <div class="rssi-row"><div class="rssi-hd"><span>Beacon Chegada</span><span id="rEV" style="font-family:monospace">-90 dBm</span></div><div class="rssi-track"><div class="rssi-fill" id="rFE" style="width:0%;background:#444"></div></div></div>
-      <div style="font-size:10px;color:#333;text-align:center;margin-top:12px">Limiar: -72 dBm ≈ 3 metros</div>
-    </div>
-
-    <!-- Stages -->
-    <div class="sec-lbl">Stages da Prova</div>
+  <div class="stages-wrap">
+    <div class="sec-lbl">Stages da prova</div>
     <div id="stagesEl"></div>
+  </div>
 
-    <!-- Total -->
-    <div class="total" id="totalBox">
-      <div><div class="total-lbl">TEMPO ACUMULADO</div><div class="total-sub" id="totalSub"></div></div>
-      <div class="total-time" id="totalTime"></div>
-    </div>
+  <div class="total-card" id="totalCard">
+    <div><div class="tl">Tempo acumulado</div><div class="ts2" id="ts2"></div></div>
+    <div class="tt" id="tt"></div>
+  </div>
 
-    <!-- Log -->
-    <div class="log" id="logBox">
-      <div class="sec-lbl">Log de Eventos</div>
-      <div class="log-list" id="logList"></div>
-    </div>
+  <div class="log-wrap" id="logWrap">
+    <div class="sec-lbl">Log</div>
+    <div class="log-inner" id="logList"></div>
+  </div>
+
+</div>
+
+<!-- HELP MODAL -->
+<div class="modal-bg" id="helpModal" onclick="closeHelp()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-title">Como usar o app</div>
+    <div class="hi"><div class="hnum">1</div><div><div class="hh">Faça o login</div><div class="hs">Preencha o slug do evento (ex: volta-mundo-2025), seu número de largada e o PIN de 4 dígitos. O login fica salvo — sem precisar repetir.</div></div></div>
+    <div class="hi"><div class="hnum">2</div><div><div class="hh">Escaneie o QR em cada ponto</div><div class="hs">Toque em Escanear, aponte a câmera para o QR fixado na largada ou chegada. O tempo é registrado automaticamente.</div></div></div>
+    <div class="hi"><div class="hnum">3</div><div><div class="hh">Sem sinal? Funciona offline</div><div class="hs">Os tempos são salvos no celular e sincronizados quando o sinal voltar. Funciona em qualquer trilha.</div></div></div>
+    <div class="hi"><div class="hnum">4</div><div><div class="hh">Deixe a tela ligada</div><div class="hs">O app ativa Wake Lock para manter a tela acesa. Mantenha o volume alto para ouvir os bipes de confirmação.</div></div></div>
+    <button class="btn-primary" onclick="closeHelp()" style="margin-top:20px">Bora pedalar!</button>
   </div>
 </div>
 
 <script>
-// ─── SUPABASE ─────────────────────────────────────────────────────────────────
+const SUPA_URL = 'https://mhqutsptyxuqdabtiosm.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ocXV0c3B0eXh1cWRhYnRpb3NtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NTY5MTQsImV4cCI6MjA5MjQzMjkxNH0.fYM3z8G0HL6Zer7qj8HjqGIncZ4YRjCT7VSmzmFrvLA';
+const SK = 'et_session', QK = 'et_queue', RK = 'et_results_';
 const { createClient } = supabase;
-const sb = createClient(
-  'https://mhqutsptyxuqdabtiosm.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ocXV0c3B0eXh1cWRhYnRpb3NtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY4NTY5MTQsImV4cCI6MjA5MjQzMjkxNH0.fYM3z8G0HL6Zer7qj8HjqGIncZ4YRjCT7VSmzmFrvLA'
-);
+const sb = createClient(SUPA_URL, SUPA_KEY);
 
-// ─── ESTADO ───────────────────────────────────────────────────────────────────
-const THRESHOLD=-72, DEBOUNCE=2000;
-const STORAGE_KEY = "enduro_offline_queue"; // chave no localStorage
+let session=null, results={}, currentStart=null;
+let scannerOn=false, scanInterval=null, liveInterval=null, videoStream=null;
+let logs=[], isOnline=navigator.onLine, isSyncing=false, wakeLock=null;
 
-let athlete=null, stages=[], results={}, currentStage=null;
-let scannerOn=false, liveInterval=null, lastTrigger={}, logs=[];
-let rssiState={start:-90,finish:-90};
-let isOnline=navigator.onLine;
-let isSyncing=false;
-function fmt(ms){if(!ms&&ms!==0)return"--:--.---";const m=Math.floor(ms/60000),s=Math.floor((ms%60000)/1000),r=ms%1000;return`${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(r).padStart(3,"0")}`}
-function addLog(msg){logs.unshift(`${new Date().toLocaleTimeString("pt-BR")} — ${msg}`);if(logs.length>20)logs.pop();renderLog()}
+function fmt(ms){if(!ms&&ms!==0)return'--:--.---';const m=Math.floor(ms/60000),s=Math.floor((ms%60000)/1000),r=ms%1000;return`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}.${String(r).padStart(3,'0')}`}
+function slug(name){return name.toLowerCase().replace(/\s+/g,'_')}
+function addLog(msg){logs.unshift(`${new Date().toLocaleTimeString('pt-BR')} — ${msg}`);if(logs.length>30)logs.pop();const w=document.getElementById('logWrap');w.classList.add('show');document.getElementById('logList').innerHTML=logs.map(l=>`<div class="log-e">${l}</div>`).join('')}
 
-// ─── FILA OFFLINE ─────────────────────────────────────────────────────────────
-// Formato: [{athlete_id, stage_id, time_ms, recorded_at, stageIndex}]
+async function hmac(msg,secret){const enc=new TextEncoder();const key=await crypto.subtle.importKey('raw',enc.encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);const sig=await crypto.subtle.sign('HMAC',key,enc.encode(msg));return Array.from(new Uint8Array(sig)).slice(0,8).map(b=>b.toString(16).padStart(2,'0')).join('')}
 
-function getQueue(){
-  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]")}catch(e){return[]}
-}
+function saveSession(d){localStorage.setItem(SK,JSON.stringify(d));session=d}
+function loadSession(){try{const r=localStorage.getItem(SK);if(!r)return null;const s=JSON.parse(r);if(new Date(s.expiresAt)<new Date()){localStorage.removeItem(SK);return null}return s}catch{return null}}
 
-function saveQueue(q){
-  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(q))}catch(e){}
-}
+function getQueue(){try{return JSON.parse(localStorage.getItem(QK)||'[]')}catch{return[]}}
+function saveQueue(q){localStorage.setItem(QK,JSON.stringify(q))}
+function addToQueue(e){const q=getQueue();if(!q.find(x=>x.stageId===e.stageId&&x.type===e.type)){q.push(e);saveQueue(q)}}
 
-function addToQueue(item){
-  const q=getQueue();
-  // evita duplicata do mesmo atleta+stage
-  const exists=q.find(x=>x.athlete_id===item.athlete_id&&x.stage_id===item.stage_id);
-  if(!exists){q.push(item);saveQueue(q)}
-}
+function setConn(state,label,sub){document.getElementById('connBar').className='conn-bar '+state;document.getElementById('connLabel').textContent=label;document.getElementById('connSub').textContent=sub}
 
-function removeFromQueue(athlete_id,stage_id){
-  const q=getQueue().filter(x=>!(x.athlete_id===athlete_id&&x.stage_id===stage_id));
-  saveQueue(q);
-}
+window.addEventListener('online',()=>{isOnline=true;const q=getQueue();if(q.length){setConn('syncing','Sinal voltou','sincronizando...');setTimeout(syncQueue,1000)}else setConn('online','Online','conectado');renderQueue()});
+window.addEventListener('offline',()=>{isOnline=false;setConn('offline','Sem sinal','tempos salvos localmente');addLog('Offline')});
 
-// ─── SYNC ─────────────────────────────────────────────────────────────────────
 async function syncQueue(){
-  if(isSyncing||!isOnline)return;
-  const q=getQueue().filter(x=>x.athlete_id===athlete?.id);
-  if(!q.length)return;
-
-  isSyncing=true;
-  setConnState("syncing",`Sincronizando ${q.length} tempo(s)...`,"enviando para o servidor");
-  document.getElementById("btnSync").disabled=true;
-  addLog(`🔄 Sincronizando ${q.length} tempo(s) offline...`);
-
-  let synced=0;
-  for(const item of q){
-    // Verifica se já existe no servidor (pode ter sido salvo por outra sync)
-    const{data:existing}=await sb.from("times").select("id").eq("athlete_id",item.athlete_id).eq("stage_id",item.stage_id).single();
-    if(existing){
-      removeFromQueue(item.athlete_id,item.stage_id);
-      synced++;
-      continue;
-    }
-    const{error}=await sb.from("times").insert({
-      athlete_id:item.athlete_id,
-      stage_id:item.stage_id,
-      time_ms:item.time_ms,
-      recorded_at:item.recorded_at,
-      organizer_id:athlete.organizer_id
-    });
-    if(!error){
-      removeFromQueue(item.athlete_id,item.stage_id);
-      results[item.stage_id]={stage_id:item.stage_id,time_ms:item.time_ms,recorded_at:item.recorded_at};
-      synced++;
-      addLog(`✅ Stage ${item.stageIndex} sincronizado — ${fmt(item.time_ms)}`);
-    } else {
-      addLog(`⚠️ Erro ao sincronizar Stage ${item.stageIndex}`);
-    }
-  }
-
-  isSyncing=false;
-  const remaining=getQueue().filter(x=>x.athlete_id===athlete?.id).length;
-  if(remaining===0){
-    setConnState("online","Online","todos os tempos sincronizados ✓");
-    addLog(`💾 Sync completo! ${synced} tempo(s) enviados`);
-  } else {
-    setConnState("online","Online",`${remaining} pendente(s)`);
-  }
-  document.getElementById("btnSync").disabled=false;
-  renderQueue();
-  render();
+  if(isSyncing||!isOnline||!session)return;
+  const q=getQueue();if(!q.length)return;
+  isSyncing=true;setConn('syncing',`Sincronizando ${q.length}...`,'enviando');
+  document.getElementById('btnSync').disabled=true;
+  const rem=[];
+  for(const e of q){try{const{data}=await sb.rpc('record_time',{p_session_token:session.sessionToken,p_qr_payload:e.qrPayload,p_recorded_at:e.recordedAt});if(!data?.ok&&!data?.duplicate)rem.push(e);else addLog(`Sync: ${e.stageName} ${e.type==='start'?'largada':'chegada'}`)}catch{rem.push(e)}}
+  saveQueue(rem);isSyncing=false;document.getElementById('btnSync').disabled=false;
+  setConn('online','Online',rem.length?`${rem.length} pendente(s)`:'todos sincronizados');renderQueue()
 }
 
-// ─── CONECTIVIDADE ────────────────────────────────────────────────────────────
-function setConnState(state, label, sub){
-  const bar=document.getElementById("connBar");
-  bar.className="conn-bar "+state;
-  document.getElementById("connLabel").textContent=label;
-  document.getElementById("connSub").textContent=sub;
-}
-
-function handleOnline(){
-  isOnline=true;
-  const q=getQueue().filter(x=>x.athlete_id===athlete?.id);
-  if(q.length>0){
-    setConnState("syncing","Sinal voltou!",`sincronizando ${q.length} tempo(s)...`);
-    addLog("📶 Conexão restaurada — iniciando sync automático");
-    setTimeout(syncQueue, 1000);
-  } else {
-    setConnState("online","Online","conectado ao servidor");
-    addLog("📶 Conexão restaurada");
-  }
-  renderQueue();
-}
-
-function handleOffline(){
-  isOnline=false;
-  setConnState("offline","Sem sinal","tempos salvos localmente");
-  addLog("📵 Sem conexão — modo offline ativado");
-}
-
-window.addEventListener("online", handleOnline);
-window.addEventListener("offline", handleOffline);
-
-// ─── SALVAR TEMPO (online ou offline) ────────────────────────────────────────
-async function saveTime(stageId,timeMs,finishTs,stageIndex){
-  const item={
-    athlete_id:athlete.id,
-    stage_id:stageId,
-    time_ms:timeMs,
-    recorded_at:new Date(finishTs).toISOString(),
-    stageIndex
-  };
-
-  if(!isOnline){
-    // Offline: salva na fila local
-    addToQueue(item);
-    addLog(`💾 Salvo offline (Stage ${stageIndex}) — sync automático quando conectar`);
-    renderQueue();
-    return;
-  }
-
-  // Online: tenta enviar direto
-  const{error}=await sb.from("times").insert({
-    athlete_id:item.athlete_id,
-    stage_id:item.stage_id,
-    time_ms:item.time_ms,
-    recorded_at:item.recorded_at,
-    organizer_id:athlete.organizer_id
-  });
-
-  if(error){
-    // Falhou mesmo com sinal? Salva na fila
-    addToQueue(item);
-    addLog(`⚠️ Falha ao enviar — salvo na fila offline`);
-    renderQueue();
-  } else {
-    addLog(`💾 Tempo salvo no servidor`);
-  }
-}
-
-// ─── RENDER FILA ──────────────────────────────────────────────────────────────
-function renderQueue(){
-  const q=getQueue().filter(x=>x.athlete_id===athlete?.id);
-  const box=document.getElementById("queueBox");
-  if(q.length===0){box.classList.remove("show");return}
-  box.classList.add("show");
-  document.getElementById("queueList").innerHTML=q.map(item=>{
-    const stg=stages.find(s=>s.id===item.stage_id);
-    return`<div class="queue-item">Stage ${item.stageIndex} — ${stg?.name||"?"} — ${fmt(item.time_ms)} <span style="color:#555">⏳ pendente</span></div>`;
-  }).join("");
-  document.getElementById("btnSync").disabled=!isOnline||isSyncing;
-}
-
-// ─── LOGIN ────────────────────────────────────────────────────────────────────
 async function doLogin(){
-  const code=document.getElementById("inCode").value.trim().toUpperCase();
-  const num=document.getElementById("inNum").value.trim();
-  const pin=document.getElementById("inPin").value.trim();
-  if(!code||!num||!pin)return;
-  const btn=document.getElementById("btnLogin");
-  btn.disabled=true; btn.textContent="Buscando...";
-
-  if(!isOnline){
-    const cached=localStorage.getItem("enduro_athlete_"+code+"_"+num);
-    if(cached){athlete=JSON.parse(cached);finishLogin();return}
-    document.getElementById("loginErr").textContent="Sem conexao. Acesse primeiro com sinal.";
-    document.getElementById("loginErr").style.display="block";
-    btn.disabled=false; btn.textContent="Entrar";
-    return;
-  }
-
-  // Busca organizador pelo código do evento
-  const{data:org,error:orgErr}=await sb.from("organizers").select("id").eq("event_code",code).single();
-  if(orgErr||!org){
-    document.getElementById("loginErr").textContent="Codigo do evento invalido.";
-    document.getElementById("loginErr").style.display="block";
-    btn.disabled=false; btn.textContent="Entrar";
-    return;
-  }
-
-  // Busca atleta pelo numero dentro do organizador
-  const{data,error}=await sb.from("athletes").select("*").eq("number",num).eq("organizer_id",org.id).single();
-  if(error||!data){
-    document.getElementById("loginErr").textContent="Numero nao encontrado neste evento.";
-    document.getElementById("loginErr").style.display="block";
-    btn.disabled=false; btn.textContent="Entrar";
-    return;
-  }
-  if(data.pin && data.pin !== pin){
-    document.getElementById("loginErr").textContent="PIN incorreto.";
-    document.getElementById("loginErr").style.display="block";
-    btn.disabled=false; btn.textContent="Entrar";
-    return;
-  }
-  athlete=data;
-  localStorage.setItem("enduro_athlete_"+code+"_"+num, JSON.stringify(data));
-  finishLogin();
+  const slug2=document.getElementById('inCode').value.trim().toLowerCase();
+  const bib=parseInt(document.getElementById('inNum').value.trim());
+  const pin=document.getElementById('inPin').value.trim();
+  const err=document.getElementById('loginErr');
+  err.style.display='none';
+  if(!slug2||!bib||!pin){err.textContent='Preencha todos os campos.';err.style.display='block';return}
+  const btn=document.getElementById('btnLogin');btn.disabled=true;btn.textContent='Entrando...';
+  try{
+    const{data,error}=await sb.rpc('athlete_login',{p_event_slug:slug2,p_bib_number:bib,p_pin:pin,p_device_info:navigator.userAgent});
+    if(error)throw new Error(error.message);
+    if(!data.ok)throw new Error(data.error);
+    saveSession({sessionToken:data.session_token,expiresAt:data.expires_at,athlete:data.athlete,event:data.event,stages:data.stages||[]});
+    finishLogin()
+  }catch(e){err.textContent=e.message;err.style.display='block';btn.disabled=false;btn.textContent='Entrar'}
 }
 
 function finishLogin(){
-  // Ativa Wake Lock ao entrar no app
   requestWakeLock();
-  document.getElementById("hName").textContent=athlete.name;
-  document.getElementById("hMeta").textContent=`#${athlete.number} · ${athlete.category}`;
-  document.getElementById("secLogin").style.display="none";
-  document.getElementById("secApp").style.display="block";
-  loadData();
+  document.getElementById('hName').textContent=session.athlete.name;
+  document.getElementById('hMeta').textContent=`#${session.athlete.bib_number} · ${session.event.name}`;
+  document.getElementById('secLogin').style.display='none';
+  document.getElementById('secApp').style.display='block';
+  loadResults()
 }
 
-// ─── CARREGAR DADOS ───────────────────────────────────────────────────────────
-async function loadData(){
-  if(isOnline){
-    setConnState("online","Carregando...","buscando stages e tempos");
-    const[{data:sd},{data:td}]=await Promise.all([
-      sb.from("stages").select("*").eq("organizer_id",athlete.organizer_id).order("id"),
-      sb.from("times").select("*").eq("athlete_id",athlete.id)
-    ]);
-    stages=sd||[];
-    results={};(td||[]).forEach(t=>{results[t.stage_id]=t});
-    // Cache local
-    localStorage.setItem(`enduro_stages_${athlete.organizer_id}`,JSON.stringify(stages));
-    localStorage.setItem(`enduro_results_${athlete.id}`,JSON.stringify(results));
-    setConnState("online","Online","conectado ao servidor");
-    addLog("✓ Dados carregados do servidor");
+async function loadResults(){
+  try{results=JSON.parse(localStorage.getItem(RK+session.athlete.id)||'{}')}catch{results={}}
+  if(!isOnline){setConn('offline','Offline','cache local');render();renderQueue();return}
+  setConn('online','Carregando...','buscando tempos');
+  try{
+    const{data}=await sb.from('times').select('*').eq('athlete_id',session.athlete.id);
+    results={};(data||[]).forEach(t=>{results[t.stage_id+'_'+t.type]=t});
+    localStorage.setItem(RK+session.athlete.id,JSON.stringify(results));
+    setConn('online','Online','conectado');addLog('Dados carregados');
+    sb.channel('times-'+session.athlete.id).on('postgres_changes',{event:'INSERT',schema:'public',table:'times',filter:`athlete_id=eq.${session.athlete.id}`},p=>{results[p.new.stage_id+'_'+p.new.type]=p.new;localStorage.setItem(RK+session.athlete.id,JSON.stringify(results));addLog('Tempo confirmado');render()}).subscribe()
+  }catch{setConn('offline','Erro','usando cache')}
+  render();renderQueue();
+  const q=getQueue();if(q.length&&isOnline)setTimeout(syncQueue,2000)
+}
 
-    // Realtime
-    sb.channel("times-"+athlete.id)
-      .on("postgres_changes",{event:"*",schema:"public",table:"times",filter:`athlete_id=eq.${athlete.id}`},p=>{
-        if(p.eventType==="INSERT"||p.eventType==="UPDATE"){results[p.new.stage_id]=p.new;addLog("🔄 Tempo atualizado pelo servidor");render()}
-      }).subscribe();
+async function toggleScanner(){if(scannerOn){stopScanner();return}await startScanner()}
 
-  } else {
-    // Offline: carrega do cache
-    setConnState("offline","Offline","usando dados salvos localmente");
-    try{stages=JSON.parse(localStorage.getItem("enduro_stages_"+athlete.organizer_id)||"[]")}catch(e){stages=[]}
-    try{results=JSON.parse(localStorage.getItem(`enduro_results_${athlete.id}`)||"{}")}catch(e){results={}}
-    addLog("📵 Modo offline — dados do cache local");
-  }
+async function startScanner(){
+  try{
+    videoStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});
+    const v=document.getElementById('qrVideo');v.srcObject=videoStream;await v.play();
+    document.getElementById('vfCard').classList.add('show');
+    document.getElementById('confCard').classList.remove('show');
+    document.getElementById('scanRow').classList.add('active');
+    document.getElementById('btnScan').classList.add('active');
+    document.getElementById('btnScan').textContent='Parar';
+    document.getElementById('scanLbl').textContent='Scanner ativo';
+    document.getElementById('scanSub').textContent='Aponte para o QR do ponto';
+    scannerOn=true;
+    const canvas=document.getElementById('qrCanvas'),ctx=canvas.getContext('2d');
+    scanInterval=setInterval(()=>{
+      const v2=document.getElementById('qrVideo');if(v2.readyState!==v2.HAVE_ENOUGH_DATA)return;
+      canvas.width=v2.videoWidth;canvas.height=v2.videoHeight;ctx.drawImage(v2,0,0,canvas.width,canvas.height);
+      const img=ctx.getImageData(0,0,canvas.width,canvas.height);
+      const code=jsQR(img.data,img.width,img.height,{inversionAttempts:'dontInvert'});
+      if(code){stopScanner();handleQR(code.data)}
+    },200);
+    addLog('Scanner QR ativo')
+  }catch(e){addLog('Câmera: '+e.message);alert('Câmera: '+e.message)}
+}
 
-  renderQueue();
+function stopScanner(){
+  clearInterval(scanInterval);
+  if(videoStream){videoStream.getTracks().forEach(t=>t.stop());videoStream=null}
+  document.getElementById('vfCard').classList.remove('show');
+  document.getElementById('scanRow').classList.remove('active');
+  document.getElementById('btnScan').classList.remove('active');
+  document.getElementById('btnScan').textContent='Escanear';
+  document.getElementById('scanLbl').textContent='Scanner inativo';
+  document.getElementById('scanSub').textContent='Toque para escanear um QR';
+  scannerOn=false
+}
+
+async function handleQR(raw){
+  let p;try{p=JSON.parse(raw)}catch{addLog('QR não reconhecido');showConf('err',null,null,null,'QR não reconhecido');playBeep('err');return}
+  const exp=await hmac(`${p.e}:${p.s}:${p.t}`,session.event.secret_key);
+  if(p.k!==exp){addLog('QR inválido');showConf('err',null,null,null,'QR inválido');playBeep('err');return}
+  const lk=p.s+'_'+p.t;
+  if(results[lk]){addLog('Já registrado: '+p.s+' '+p.t);showConf('dup',p,null,null,'Já registrado');return}
+  const recAt=new Date().toISOString();
+  const sname=session.stages?.find(s=>slug(s.name)===p.s)?.name||p.s;
+  let dur=null;
+  if(p.t==='finish'){const sr=results[p.s+'_start'];if(sr)dur=new Date(recAt)-new Date(sr.recorded_at);else if(currentStart?.stageId===p.s)dur=Date.now()-currentStart.ts;currentStart=null}
+  else currentStart={stageId:p.s,ts:Date.now()};
+  results[lk]={stage_id:p.s,type:p.t,recorded_at:recAt,duration_ms:dur};
+  localStorage.setItem(RK+session.athlete.id,JSON.stringify(results));
+  addLog(`${p.t==='start'?'Largada':'Chegada'} — ${sname}`);
+  playBeep(p.t==='start'?'start':'finish');
+  showConf('ok',p,dur,recAt,sname);
   render();
-
-  // Verifica se há fila pendente para esse atleta
-  const pending=getQueue().filter(x=>x.athlete_id===athlete.id);
-  if(pending.length>0&&isOnline){
-    addLog(`🔄 ${pending.length} tempo(s) offline encontrados — sincronizando...`);
-    setTimeout(syncQueue,2000);
-  }
+  const qrp={v:1,e:p.e,s:p.s,t:p.t,k:p.k};
+  if(isOnline){try{const{data}=await sb.rpc('record_time',{p_session_token:session.sessionToken,p_qr_payload:qrp,p_recorded_at:recAt});if(data?.ok){document.getElementById('sdot').className='sdot ok';document.getElementById('slbl').textContent='Sincronizado ✓';addLog('Salvo no servidor')}else if(!data?.duplicate)throw new Error()}catch{addToQueue({stageId:p.s,type:p.t,stageName:sname,qrPayload:qrp,recordedAt:recAt});addLog('Falha — salvo offline');renderQueue()}}
+  else{addToQueue({stageId:p.s,type:p.t,stageName:sname,qrPayload:qrp,recordedAt:recAt});addLog('Salvo offline');renderQueue()}
 }
 
-// ─── SCANNER ─────────────────────────────────────────────────────────────────
-function toggleScanner(){
-  scannerOn=!scannerOn;
-  document.getElementById("scanner").className="scanner"+(scannerOn?" on":"");
-  document.getElementById("btnScan").className="btn-scan"+(scannerOn?" on":"");
-  document.getElementById("btnScan").textContent=scannerOn?"PAUSAR":"ATIVAR";
-  document.getElementById("sLabel").textContent=scannerOn?"● SCANNER ATIVO":"○ SCANNER INATIVO";
-  document.getElementById("sSub").textContent=scannerOn?"Detectando beacons BLE":"Toque para ativar";
-  document.getElementById("rssiBox").className="rssi-box"+(scannerOn&&!currentStage?" show":"");
-  addLog(scannerOn?"📡 Scanner ativado":"⏸ Scanner pausado");
-  render();
+function showConf(status,p,dur,recAt,sname){
+  const card=document.getElementById('confCard');card.classList.add('show');
+  card.style.borderColor=status==='ok'?(p?.t==='finish'?'#16a34a33':'#E8593C33'):'#e0dfd8';
+  document.getElementById('ci').textContent=status==='ok'?(p?.t==='finish'?'🏁':'🟠'):status==='dup'?'⚠️':'❌';
+  document.getElementById('cs').textContent=sname||'—';
+  const ct=document.getElementById('ct');
+  ct.textContent=p?.t==='start'?'LARGADA':p?.t==='finish'?'CHEGADA':status==='dup'?'JÁ REGISTRADO':'ERRO';
+  ct.className='ct '+(p?.t||'err');
+  document.getElementById('cts').textContent=recAt?new Date(recAt).toLocaleTimeString('pt-BR'):'';
+  document.getElementById('cd').textContent=dur?`Tempo no stage: ${fmt(dur)}`:'';
+  const cs=document.getElementById('csync');cs.style.display=status==='ok'?'flex':'none';
+  document.getElementById('sdot').className='sdot';document.getElementById('slbl').textContent='Sincronizando...'
 }
-
-// ─── BEACON ───────────────────────────────────────────────────────────────────
-function triggerBeacon(uuid,rssiVal){
-  if(!scannerOn)return;
-  const now=Date.now();
-  if((now-(lastTrigger[uuid]||0))<DEBOUNCE)return;
-  if(rssiVal<THRESHOLD)return;
-  lastTrigger[uuid]=now;
-  const ss=stages.find(s=>`S${s.id}-START`===uuid);
-  const fs=stages.find(s=>`S${s.id}-FINISH`===uuid);
-  const ssIdx=stages.findIndex(s=>`S${s.id}-START`===uuid)+1;
-  const fsIdx=stages.findIndex(s=>`S${s.id}-FINISH`===uuid)+1;
-  if(ss&&!results[ss.id]&&currentStage?.stageId!==ss.id){
-    currentStage={stageId:ss.id,startTs:now};
-    addLog(`🟠 LARGADA Stage ${ssIdx}`);
-    playBeep("start");render();
-  }
-  if(fs&&currentStage?.stageId===fs.id){
-    const t=now-currentStage.startTs;
-    const entry={stage_id:fs.id,time_ms:t,recorded_at:new Date(now).toISOString()};
-    results[fs.id]=entry;
-    // Atualiza cache local imediatamente
-    localStorage.setItem(`enduro_results_${athlete.id}`,JSON.stringify(results));
-    saveTime(fs.id,t,now,fsIdx);
-    currentStage=null;
-    addLog(`✅ CHEGADA Stage ${fsIdx} — ${fmt(t)}`);
-    playBeep("finish");render();
-  }
-}
-
-// ─── SIMULAÇÃO ────────────────────────────────────────────────────────────────
-function simApproach(type,uuid){
-  const steps=[-95,-88,-82,-76,-70,-65,-68,-74,-82,-90];let i=0;
-  const id=setInterval(()=>{rssiState[type]=steps[i]??-90;updateRSSI();i++;if(i>=steps.length){clearInterval(id);rssiState[type]=-90;updateRSSI()}},150);
-  setTimeout(()=>triggerBeacon(uuid,-65),600);
-}
-function simStart(sid){const s=stages.find(x=>x.id===sid);if(s)simApproach("start",`S${s.id}-START`)}
-function simFinish(sid){const s=stages.find(x=>x.id===sid);if(s)simApproach("finish",`S${s.id}-FINISH`)}
-
-// ─── RENDER ───────────────────────────────────────────────────────────────────
-function updateRSSI(){
-  ["start","finish"].forEach(t=>{
-    const r=rssiState[t],p=Math.min(100,Math.max(0,((r+100)/40)*100));
-    const c=r>=THRESHOLD?"#00ff88":r>-85?"#ffcc00":"#ff4444";
-    const id=t==="start"?"S":"E";
-    document.getElementById(`r${id}V`).textContent=`${r} dBm`;
-    document.getElementById(`r${id}V`).style.color=c;
-    document.getElementById(`rF${id}`).style.width=p+"%";
-    document.getElementById(`rF${id}`).style.background=c;
-  });
-}
+function dismissConf(){document.getElementById('confCard').classList.remove('show')}
 
 function renderStages(){
-  const q=getQueue().filter(x=>x.athlete_id===athlete?.id);
-  if(!stages.length){
-    document.getElementById("stagesEl").innerHTML=`<div style="text-align:center;color:#444;font-size:13px;padding:20px">Nenhum stage cadastrado.<br><small>O organizador precisa cadastrar no painel.</small></div>`;
-    return;
-  }
-  document.getElementById("stagesEl").innerHTML=stages.map((s,idx)=>{
-    const r=results[s.id];
-    const isPending=!r&&q.find(x=>x.stage_id===s.id);
-    const isA=currentStage?.stageId===s.id;
-    const isD=!!r;
-    let cls="sc"+(isD?" done":isPending?" pending":isA?" active":"");
-    let right;
-    if(isD) right=`<div><div class="sc-time">${fmt(r.time_ms)}</div><div class="sc-time-lbl">FINALIZADO</div></div>`;
-    else if(isPending) right=`<div><div class="sc-time pend">${fmt(isPending.time_ms)}</div><div class="sc-time-lbl pend">⏳ PENDENTE SYNC</div></div>`;
-    else if(isA) right=`<div class="sc-run">● EM ANDAMENTO</div>`;
-    else right=`<div class="sc-wait">AGUARDANDO</div>`;
-    const btns=!isD&&!isPending&&scannerOn?`<div class="sc-btns">${!isA?`<button class="sc-btn btn-s" onclick="simStart(${s.id})">📡 Simular LARGADA</button>`:`<button class="sc-btn btn-f" onclick="simFinish(${s.id})">🏁 Simular CHEGADA</button>`}</div>`:"";
-    const meta=isD?`<div class="sc-meta">Chegada: ${new Date(r.recorded_at).toLocaleTimeString("pt-BR")}</div>`:"";
-    return`<div class="${cls}"><div class="scan-line"></div><div class="sc-top"><div><div class="sc-num">Stage ${idx+1}</div><div class="sc-name">${s.name}</div></div><div>${right}</div></div>${btns}${meta}</div>`;
-  }).join("");
+  const stages=session?.stages||[];const el=document.getElementById('stagesEl');
+  if(!stages.length){el.innerHTML=`<div style="text-align:center;color:#bbb;font-size:12px;padding:24px 0">Nenhum stage.<br>O organizador precisa criar no painel.</div>`;return}
+  const q=getQueue();
+  el.innerHTML=stages.map((s,i)=>{
+    const sl=slug(s.name);const rF=results[sl+'_finish'];const rS=results[sl+'_start'];
+    const isPend=q.find(x=>x.stageId===sl);const isRun=!rF&&!!rS;
+    let cls='stage-card'+(rF?' done':isPend?' pending':isRun?' running':'');
+    let right=rF?`<div><div class="st">${fmt(rF.duration_ms)}</div><div class="stl">Finalizado</div></div>`:isPend?`<div><div class="st p">—</div><div class="stl p">Sync pendente</div></div>`:isRun?`<div class="sr">● Em andamento</div>`:`<div class="sw">Aguardando</div>`;
+    const meta=rF?`<div class="smeta">Chegada: ${new Date(rF.recorded_at).toLocaleTimeString('pt-BR')}</div>`:'';
+    return`<div class="${cls}"><div style="display:flex;justify-content:space-between;align-items:center;width:100%"><div><div class="sn">STAGE ${i+1}</div><div class="snm">${s.name}</div></div><div style="text-align:right">${right}</div></div>${meta}</div>`
+  }).join('')
 }
 
 function renderTotal(){
-  const allTimes=[
-    ...Object.values(results),
-    ...getQueue().filter(x=>x.athlete_id===athlete?.id&&!results[x.stage_id])
-  ];
-  const total=allTimes.reduce((a,r)=>a+(r.time_ms||0),0);
-  const done=allTimes.length;
-  const box=document.getElementById("totalBox");
-  if(done>0){
-    box.classList.add("show");
-    document.getElementById("totalSub").textContent=`${done}/${stages.length} stages concluídos`;
-    document.getElementById("totalTime").textContent=fmt(total);
-  } else box.classList.remove("show");
+  const stages=session?.stages||[];
+  const times=stages.map(s=>results[slug(s.name)+'_finish']).filter(Boolean);
+  const total=times.reduce((a,r)=>a+(r.duration_ms||0),0);
+  const card=document.getElementById('totalCard');
+  if(times.length){card.classList.add('show');document.getElementById('ts2').textContent=`${times.length} de ${stages.length} stages`;document.getElementById('tt').textContent=fmt(total)}
+  else card.classList.remove('show')
 }
 
-function renderLog(){
-  if(!logs.length)return;
-  document.getElementById("logBox").classList.add("show");
-  document.getElementById("logList").innerHTML=logs.map(l=>`<div class="log-e">${l}</div>`).join("");
-}
-
-function renderLiveTimer(){
-  const box=document.getElementById("liveBox");
-  if(currentStage){
-    box.classList.add("show");
-    const idx=stages.findIndex(x=>x.id===currentStage.stageId)+1;
-    document.getElementById("liveLbl").textContent=`STAGE ${idx} EM ANDAMENTO`;
-    document.getElementById("liveName").textContent=stages.find(x=>x.id===currentStage.stageId)?.name||"";
+function renderLive(){
+  const card=document.getElementById('liveCard');
+  if(currentStart){
+    card.classList.add('show');
+    const s=session?.stages?.find(x=>slug(x.name)===currentStart.stageId);
+    document.getElementById('liveSt').textContent=s?.name||'';
     if(liveInterval)clearInterval(liveInterval);
-    liveInterval=setInterval(()=>{document.getElementById("liveTime").textContent=fmt(Date.now()-currentStage.startTs)},50);
-  }else{box.classList.remove("show");if(liveInterval){clearInterval(liveInterval);liveInterval=null}}
+    liveInterval=setInterval(()=>{document.getElementById('liveTime').textContent=fmt(Date.now()-currentStart.ts)},50)
+  }else{card.classList.remove('show');if(liveInterval){clearInterval(liveInterval);liveInterval=null}}
 }
 
-function render(){renderStages();renderTotal();renderLiveTimer();updateRSSI()}
-
-// ─── AUDIO ────────────────────────────────────────────────────────────────────
-function playBeep(type){
-  try{
-    const ctx=new(window.AudioContext||window.webkitAudioContext)();
-    if(type==="start"){const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.setValueAtTime(880,ctx.currentTime);o.frequency.setValueAtTime(1100,ctx.currentTime+.1);g.gain.setValueAtTime(.4,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.4);o.start();o.stop(ctx.currentTime+.4)}
-    else{[0,.15,.30].forEach(off=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=1320;g.gain.setValueAtTime(.3,ctx.currentTime+off);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+off+.12);o.start(ctx.currentTime+off);o.stop(ctx.currentTime+off+.12)})}
-  }catch(e){}
+function renderQueue(){
+  const q=getQueue();const card=document.getElementById('queueCard');
+  if(!q.length){card.classList.remove('show');return}
+  card.classList.add('show');
+  document.getElementById('queueList').innerHTML=q.map(x=>`<div class="queue-item">${x.stageName} · ${x.type==='start'?'Largada':'Chegada'}</div>`).join('');
+  document.getElementById('btnSync').disabled=!isOnline||isSyncing
 }
 
-// ─── WAKE LOCK ───────────────────────────────────────────────────────────────
-let wakeLock = null;
+function render(){renderStages();renderTotal();renderLive()}
 
-async function requestWakeLock(){
-  // Verifica suporte
-  if(!('wakeLock' in navigator)){
-    showWakeLockStatus(false, "Wake Lock não suportado neste navegador");
-    return;
-  }
-  try {
-    wakeLock = await navigator.wakeLock.request('screen');
-    showWakeLockStatus(true, "Tela ativa — app rodando em segundo plano");
-    addLog("🔒 Wake Lock ativo — tela não vai bloquear");
+function playBeep(type){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();if(type==='start'){const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.setValueAtTime(880,ctx.currentTime);o.frequency.setValueAtTime(1100,ctx.currentTime+.1);g.gain.setValueAtTime(.4,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.4);o.start();o.stop(ctx.currentTime+.4)}else if(type==='finish'){[0,.15,.3].forEach(off=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=1320;g.gain.setValueAtTime(.3,ctx.currentTime+off);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+off+.12);o.start(ctx.currentTime+off);o.stop(ctx.currentTime+off+.12)})}else{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=220;g.gain.setValueAtTime(.3,ctx.currentTime);g.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+.3);o.start();o.stop(ctx.currentTime+.3)}}catch(e){}}
 
-    // Re-ativa automaticamente se o usuário voltar ao app
-    wakeLock.addEventListener('release', () => {
-      addLog("⚠️ Wake Lock liberado");
-      showWakeLockStatus(false, "Wake Lock inativo — toque para reativar");
-    });
-  } catch(err) {
-    showWakeLockStatus(false, "Não foi possível ativar o Wake Lock");
-    addLog("⚠️ Wake Lock falhou: " + err.message);
-  }
-}
+async function requestWakeLock(){if(!('wakeLock'in navigator))return;try{wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>{wakeLock=null});addLog('Wake Lock ativo')}catch(e){}}
+document.addEventListener('visibilitychange',async()=>{if(!wakeLock&&document.visibilityState==='visible')await requestWakeLock()});
 
-async function releaseWakeLock(){
-  if(wakeLock){
-    await wakeLock.release();
-    wakeLock = null;
-  }
-}
+function openHelp(){document.getElementById('helpModal').classList.add('show')}
+function closeHelp(){document.getElementById('helpModal').classList.remove('show')}
 
-function showWakeLockStatus(active, msg){
-  const bar = document.getElementById("wakeLockBar");
-  const dot = document.getElementById("wlDot");
-  const txt = document.getElementById("wlTxt");
-  if(!bar) return;
-  bar.style.display = "flex";
-  bar.style.cursor = active ? "default" : "pointer";
-  bar.onclick = active ? null : requestWakeLock;
-  dot.className = "dot" + (active ? " ok" : " err");
-  txt.textContent = msg;
-}
-
-// Re-ativa Wake Lock quando app volta para primeiro plano
-document.addEventListener('visibilitychange', async () => {
-  if(wakeLock !== null && document.visibilityState === 'visible'){
-    await requestWakeLock();
-    addLog("🔒 Wake Lock reativado");
-  }
-});
-
-// ─── INIT ─────────────────────────────────────────────────────────────────────
-document.getElementById("inNum").addEventListener("keydown",e=>{if(e.key==="Enter")doLogin()});
-window.addEventListener("beforeunload", releaseWakeLock);
-
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("/sw.js")
-    .then(()=>console.log("SW registrado"))
-    .catch(e=>console.log("SW falhou:", e));
-}
-
-// Registra Service Worker para PWA
-if("serviceWorker" in navigator){
-  navigator.serviceWorker.register("/sw.js")
-    .then(()=>console.log("SW registrado"))
-    .catch(e=>console.log("SW falhou:", e));
-}
-// Atualiza estado inicial de conectividade
-if(!isOnline)setConnState("offline","Sem sinal","modo offline — dados salvos localmente");
+if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
+if(!isOnline)setConn('offline','Sem sinal','conecte para fazer login');
+session=loadSession();
+if(session)finishLogin();
 </script>
-<!-- MODAL INSTRUÇÕES -->
-<div id="helpOverlay" onclick="closeHelp()" style="position:fixed;inset:0;background:#000000dd;z-index:200;display:none;align-items:flex-start;justify-content:center;padding:20px;overflow-y:auto">
-  <div onclick="event.stopPropagation()" style="width:100%;max-width:440px;margin:auto;padding-bottom:40px">
-
-    <!-- Header -->
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;padding-top:8px">
-      <div>
-        <div style="font-size:10px;color:#555;letter-spacing:3px;text-transform:uppercase">Guia do Atleta</div>
-        <div style="font-family:'Bebas Neue',cursive;font-size:28px;color:#ff6b00;letter-spacing:1px">COMO USAR O APP</div>
-      </div>
-      <button onclick="closeHelp()" style="background:none;border:none;color:#555;font-size:24px;cursor:pointer">✕</button>
-    </div>
-
-    <!-- Card 1 -->
-    <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:16px;padding:20px 24px;margin-bottom:12px;border-left:3px solid #ff6b00">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
-        <div style="width:44px;height:44px;border-radius:12px;background:#ff6b0022;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📱</div>
-        <div>
-          <div style="font-size:11px;color:#ff6b0088;letter-spacing:2px;text-transform:uppercase">Passo 1</div>
-          <div style="font-size:17px;font-weight:700;font-family:'Bebas Neue',cursive;letter-spacing:.5px">Faça o Login</div>
-        </div>
-      </div>
-      <div style="font-size:13px;color:#888;line-height:1.7">
-        Na tela inicial, preencha os <strong style="color:#ccc">3 campos</strong>:
-      </div>
-      <div style="margin-top:10px;display:flex;flex-direction:column;gap:6px">
-        <div style="display:flex;align-items:center;gap:10px;background:#111;border-radius:8px;padding:8px 12px">
-          <span style="font-size:16px">🎯</span>
-          <div><div style="font-size:12px;font-weight:700;color:#ccc">Código do Evento</div><div style="font-size:11px;color:#555">Fornecido pelo organizador · ex: ENDURO25</div></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;background:#111;border-radius:8px;padding:8px 12px">
-          <span style="font-size:16px">🔢</span>
-          <div><div style="font-size:12px;font-weight:700;color:#ccc">Número de Largada</div><div style="font-size:11px;color:#555">Impresso no seu número de peito</div></div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px;background:#111;border-radius:8px;padding:8px 12px">
-          <span style="font-size:16px">🔐</span>
-          <div><div style="font-size:12px;font-weight:700;color:#ccc">PIN</div><div style="font-size:11px;color:#555">Código de 4 dígitos fornecido pelo organizador</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 2 -->
-    <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:16px;padding:20px 24px;margin-bottom:12px;border-left:3px solid #e8c547">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
-        <div style="width:44px;height:44px;border-radius:12px;background:#e8c54722;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📡</div>
-        <div>
-          <div style="font-size:11px;color:#e8c54788;letter-spacing:2px;text-transform:uppercase">Passo 2</div>
-          <div style="font-size:17px;font-weight:700;font-family:'Bebas Neue',cursive;letter-spacing:.5px">Ative o Scanner</div>
-        </div>
-      </div>
-      <div style="font-size:13px;color:#888;line-height:1.7">
-        Toque no botão <strong style="color:#ff6b00">ATIVAR</strong> para ligar o scanner BLE. O app começa a detectar os beacons instalados na largada e chegada de cada stage.
-      </div>
-      <div style="margin-top:12px;background:#111;border-radius:8px;padding:10px 14px;font-size:12px;color:#555;display:flex;gap:8px;align-items:flex-start">
-        <span>💡</span>
-        <span>Mantenha o celular <strong style="color:#ccc">desbloqueado</strong> e o app <strong style="color:#ccc">aberto</strong> durante toda a prova.</span>
-      </div>
-    </div>
-
-    <!-- Card 3 -->
-    <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:16px;padding:20px 24px;margin-bottom:12px;border-left:3px solid #ff6b00">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
-        <div style="width:44px;height:44px;border-radius:12px;background:#ff6b0022;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🟠</div>
-        <div>
-          <div style="font-size:11px;color:#ff6b0088;letter-spacing:2px;text-transform:uppercase">Passo 3</div>
-          <div style="font-size:17px;font-weight:700;font-family:'Bebas Neue',cursive;letter-spacing:.5px">Largada do Stage</div>
-        </div>
-      </div>
-      <div style="font-size:13px;color:#888;line-height:1.7">
-        Ao se aproximar da <strong style="color:#ccc">linha de largada</strong> a ~3 metros, o beacon é detectado automaticamente. Você ouvirá um <strong style="color:#ff6b00">bipe ascendente</strong> e o cronômetro inicia.
-      </div>
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <div style="flex:1;background:#ff6b0011;border:1px solid #ff6b0033;border-radius:8px;padding:10px;text-align:center">
-          <div style="font-size:20px">🔊</div>
-          <div style="font-size:11px;color:#ff6b00;margin-top:4px;font-weight:700">BIP ↗</div>
-          <div style="font-size:10px;color:#555">largada detectada</div>
-        </div>
-        <div style="flex:1;background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:10px;text-align:center">
-          <div style="font-size:20px">⏱</div>
-          <div style="font-size:11px;color:#ccc;margin-top:4px;font-weight:700">CRONÔMETRO</div>
-          <div style="font-size:10px;color:#555">inicia automaticamente</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 4 -->
-    <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:16px;padding:20px 24px;margin-bottom:12px;border-left:3px solid #00ff88">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
-        <div style="width:44px;height:44px;border-radius:12px;background:#00ff8822;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🏁</div>
-        <div>
-          <div style="font-size:11px;color:#00ff8888;letter-spacing:2px;text-transform:uppercase">Passo 4</div>
-          <div style="font-size:17px;font-weight:700;font-family:'Bebas Neue',cursive;letter-spacing:.5px">Chegada do Stage</div>
-        </div>
-      </div>
-      <div style="font-size:13px;color:#888;line-height:1.7">
-        Ao cruzar a <strong style="color:#ccc">linha de chegada</strong>, o beacon registra o tempo automaticamente. Você ouvirá <strong style="color:#00ff88">três bipes</strong> e o tempo aparece na tela.
-      </div>
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <div style="flex:1;background:#00ff8811;border:1px solid #00ff8833;border-radius:8px;padding:10px;text-align:center">
-          <div style="font-size:20px">🔊</div>
-          <div style="font-size:11px;color:#00ff88;margin-top:4px;font-weight:700">BIP BIP BIP</div>
-          <div style="font-size:10px;color:#555">chegada detectada</div>
-        </div>
-        <div style="flex:1;background:#111;border:1px solid #1a1a1a;border-radius:8px;padding:10px;text-align:center">
-          <div style="font-size:20px">💾</div>
-          <div style="font-size:11px;color:#ccc;margin-top:4px;font-weight:700">TEMPO SALVO</div>
-          <div style="font-size:10px;color:#555">enviado ao servidor</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 5 — Offline -->
-    <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:16px;padding:20px 24px;margin-bottom:12px;border-left:3px solid #e8c547">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
-        <div style="width:44px;height:44px;border-radius:12px;background:#e8c54722;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📵</div>
-        <div>
-          <div style="font-size:11px;color:#e8c54788;letter-spacing:2px;text-transform:uppercase">Sem Sinal?</div>
-          <div style="font-size:17px;font-weight:700;font-family:'Bebas Neue',cursive;letter-spacing:.5px">Modo Offline</div>
-        </div>
-      </div>
-      <div style="font-size:13px;color:#888;line-height:1.7">
-        Sem internet na trilha? <strong style="color:#ccc">Sem problema.</strong> Os tempos são salvos automaticamente no celular e sincronizados com o servidor assim que o sinal voltar.
-      </div>
-      <div style="margin-top:12px;display:flex;gap:6px;flex-wrap:wrap">
-        <div style="padding:4px 10px;border-radius:6px;background:#00ff8811;border:1px solid #00ff8833;font-size:11px;color:#00ff88">🟢 Online → salva direto</div>
-        <div style="padding:4px 10px;border-radius:6px;background:#ff444411;border:1px solid #ff444433;font-size:11px;color:#ff6666">🔴 Offline → salva no celular</div>
-        <div style="padding:4px 10px;border-radius:6px;background:#e8c54711;border:1px solid #e8c54733;font-size:11px;color:#e8c547">🔄 Sinal volta → sync automático</div>
-      </div>
-    </div>
-
-    <!-- Card 6 — Dicas -->
-    <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:16px;padding:20px 24px;margin-bottom:12px">
-      <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:14px">⚡ Dicas Importantes</div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:16px;flex-shrink:0">🔋</span>
-          <div style="font-size:12px;color:#888;line-height:1.6"><strong style="color:#ccc">Bateria</strong> — Carregue o celular antes da prova. O app consome pouca bateria mas mantenha acima de 30%.</div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:16px;flex-shrink:0">📲</span>
-          <div style="font-size:12px;color:#888;line-height:1.6"><strong style="color:#ccc">App aberto</strong> — Não minimize o app durante os stages. Deixe a tela ligada.</div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:16px;flex-shrink:0">📍</span>
-          <div style="font-size:12px;color:#888;line-height:1.6"><strong style="color:#ccc">Posição do celular</strong> — Prefira o celular no bolso do jersey ou guidão, não dentro de mochila fechada.</div>
-        </div>
-        <div style="display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:16px;flex-shrink:0">🔇</span>
-          <div style="font-size:12px;color:#888;line-height:1.6"><strong style="color:#ccc">Som</strong> — Deixe o volume no máximo para ouvir os bipes de largada e chegada.</div>
-        </div>
-      </div>
-    </div>
-
-    <button onclick="closeHelp()" style="width:100%;padding:14px;border-radius:12px;border:none;background:#ff6b00;color:#000;font-weight:700;font-size:15px;cursor:pointer;font-family:inherit;margin-top:4px">
-      Entendido, bora pedalar! 🚵
-    </button>
-
-  </div>
-</div>
-
-<script>
-function openHelp(){document.getElementById("helpOverlay").style.display="flex"}
-function closeHelp(){document.getElementById("helpOverlay").style.display="none"}
-</script>
-
 </body>
 </html>
